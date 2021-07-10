@@ -10,6 +10,7 @@ import UIKit
 class ViewController: UIViewController {
 
     @IBOutlet weak var smallView: UIView!
+    
     @IBOutlet weak var redValueLabel: UILabel!
     @IBOutlet weak var greenValueLabel: UILabel!
     @IBOutlet weak var blueValueLabel: UILabel!
@@ -29,20 +30,20 @@ class ViewController: UIViewController {
     
     @IBAction func redSliderAction() {
         redValueLabel.text = String(format: "%.2f", redSlider.value)
-        getSliedersValue()
+        getRGB()
     }
     
     @IBAction func greenSliderAction() {
         greenValueLabel.text = String(format: "%.2f", greenSlider.value)
-        getSliedersValue()
+        getRGB()
     }
     
     @IBAction func blueSliderAction() {
         blueValueLabel.text = String(format: "%.2f", blueSlider.value)
-        getSliedersValue()
+        getRGB()
     }
     
-    private func getSliedersValue() {
+    private func getRGB() {
         smallView.backgroundColor = UIColor(red: CGFloat(redSlider.value),
                                             green: CGFloat(greenSlider.value),
                                             blue: CGFloat(blueSlider.value),
