@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  SettingsViewController.swift
 //  SlidersRGB
 //
 //  Created by Nikita on 09.07.21.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class SettingsViewController: UIViewController {
 
     @IBOutlet weak var smallView: UIView!
     
