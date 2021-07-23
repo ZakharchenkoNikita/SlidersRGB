@@ -20,6 +20,9 @@ class SettingsViewController: UIViewController {
     @IBOutlet weak var greenSlider: UISlider!
     @IBOutlet weak var blueSlider: UISlider!
     
+    
+    @IBOutlet var rgbValueTF: [UITextField]!
+    
     // MARK: properties
     var smallViewColor: UIColor!
     var delegate: SettingsViewControllerDelegate!
@@ -36,10 +39,17 @@ class SettingsViewController: UIViewController {
         setupSliders()
         setupLabel(for: redValueLabel, greenValueLabel, blueValueLabel)
         setColor()
+        
+        getDoneButtonOnKeyboard()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        view.endEditing(true)
     }
     
     // MARK: IB Actions
@@ -97,5 +107,26 @@ extension SettingsViewController {
         redSlider.value = redSliderValue
         greenSlider.value = greenSliderValue
         blueSlider.value = blueSliderValue
+    }
+}
+
+// MARK: working with keyboard
+extension SettingsViewController: UITextFieldDelegate {
+    
+    private func getDoneButtonOnKeyboard() {
+        let toolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: 30))
+        toolBar.barStyle = .default
+        toolBar.sizeToFit()
+        
+        let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(dismissKeyboard))
+        toolBar.items = [doneButton]
+        
+        for textField in rgbValueTF {
+            textField.inputAccessoryView = toolBar
+        }
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
 }
