@@ -147,9 +147,9 @@ extension SettingsViewController: UITextFieldDelegate {
             setupLabel(for: redValueLabel, greenValueLabel, blueValueLabel)
             setColor()
         } else if text == "" {
-            callAlert(title: "Ошибочка 🥲", message: "Поле не может быть пустым. В следующий раз будьте бдительней.")
+            callAlert(message: "Поле не может быть пустым.")
         } else {
-            callAlert(title: "Ошибочка 🥲", message: "Число не должно превышать 1.00! В следующий раз будьте бдительней.")
+            callAlert(message: "Число не должно превышать 1.00!")
         }
     }
     
@@ -177,8 +177,8 @@ extension SettingsViewController: UITextFieldDelegate {
         view.endEditing(true)
     }
 
-    private func callAlert(title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+    private func callAlert(message: String) {
+        let alert = UIAlertController(title: "Ошибочка 🥲", message: message, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
         alert.addAction(okAction)
         
