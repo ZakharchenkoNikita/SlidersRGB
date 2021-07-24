@@ -42,6 +42,7 @@ class SettingsViewController: UIViewController {
         setColor()
     
         getDoneButtonOnKeyboard()
+        setupTFDelegate()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -112,11 +113,14 @@ extension SettingsViewController {
     }
     
     private func setupTF() {
-        for tf in rgbValueTF {
-            switch tf.tag {
-            case 0: tf.text = getString(slider: redSlider)
-            case 1: tf.text = getString(slider: greenSlider)
-            default: tf.text = getString(slider: blueSlider)
+        for textField in rgbValueTF {
+            switch textField.tag {
+            case 0:
+                textField.text = getString(slider: redSlider)
+            case 1:
+                textField.text = getString(slider: greenSlider)
+            default:
+                textField.text = getString(slider: blueSlider)
             }
         }
     }
@@ -125,13 +129,37 @@ extension SettingsViewController {
 // MARK: working with keyboard
 extension SettingsViewController: UITextFieldDelegate {
     
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        guard let text = textField.text else { return }
+        
+        switch textField.tag {
+        case 0:
+            redSlider.setValue(Float(text) ?? 0.0, animated: true)
+            redValueLabel.text = text
+        case 1:
+            greenSlider.setValue(Float(text) ?? 0.0, animated: true)
+            greenValueLabel.text = text
+        default:
+            redSlider.setValue(Float(text) ?? 0.0, animated: true)
+            blueValueLabel.text = text
+        }
+        setColor()
+    }
+    
+    private func setupTFDelegate() {
+        for textfield in rgbValueTF {
+            textfield.delegate = self
+        }
+    }
+    
     private func getDoneButtonOnKeyboard() {
         let toolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: 30))
         toolBar.barStyle = .default
         toolBar.sizeToFit()
         
         let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(dismissKeyboard))
-        toolBar.items = [doneButton]
+        let flexBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        toolBar.items = [flexBarButton, doneButton]
         
         for textField in rgbValueTF {
             textField.inputAccessoryView = toolBar
