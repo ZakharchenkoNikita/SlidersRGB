@@ -38,8 +38,9 @@ class SettingsViewController: UIViewController {
         
         setupSliders()
         setupLabel(for: redValueLabel, greenValueLabel, blueValueLabel)
+        setupTF()
         setColor()
-        
+    
         getDoneButtonOnKeyboard()
     }
 
@@ -55,6 +56,7 @@ class SettingsViewController: UIViewController {
     // MARK: IB Actions
     @IBAction func rgbSlider(_ sender: UISlider) {
         setColor()
+        setupTF()
         
         switch sender {
         case redSlider: setupLabel(for: redValueLabel)
@@ -107,6 +109,16 @@ extension SettingsViewController {
         redSlider.value = redSliderValue
         greenSlider.value = greenSliderValue
         blueSlider.value = blueSliderValue
+    }
+    
+    private func setupTF() {
+        for tf in rgbValueTF {
+            switch tf.tag {
+            case 0: tf.text = getString(slider: redSlider)
+            case 1: tf.text = getString(slider: greenSlider)
+            default: tf.text = getString(slider: blueSlider)
+            }
+        }
     }
 }
 
