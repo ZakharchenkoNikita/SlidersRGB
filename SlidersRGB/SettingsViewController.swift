@@ -56,22 +56,22 @@ class SettingsViewController: UIViewController {
     
     // MARK: IB Actions
     @IBAction func rgbSlider(_ sender: UISlider) {
-        setColor()
-        setupTF()
-        
         switch sender {
         case redSlider: setupLabel(for: redValueLabel)
         case greenSlider: setupLabel(for: greenValueLabel)
         default: setupLabel(for: blueValueLabel)
         }
+        
+        setColor()
+        setupTF()
     }
     
     @IBAction func doneButtonPressed() {
-        delegate.setSmallViewColor(redSlider: CGFloat(redSlider.value),
+        delegate.setViewColor(redSlider: CGFloat(redSlider.value),
                              greenSlider: CGFloat(greenSlider.value),
                              blueSlider: CGFloat(blueSlider.value))
         
-        navigationController?.popViewController(animated: true)
+        navigationController?.popViewController(animated: false)
         dismiss(animated: true, completion: nil)
     }
 }
@@ -86,7 +86,7 @@ extension SettingsViewController {
     }
     
     private func setupLabel(for labels: UILabel...) {
-        labels.forEach { label in
+        for label in labels {
             switch label {
             case redValueLabel:
                 label.text = getString(slider: redSlider)
@@ -132,18 +132,25 @@ extension SettingsViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         guard let text = textField.text else { return }
         
-        switch textField.tag {
-        case 0:
-            redSlider.setValue(Float(text) ?? 0.0, animated: true)
-            redValueLabel.text = text
-        case 1:
-            greenSlider.setValue(Float(text) ?? 0.0, animated: true)
-            greenValueLabel.text = text
-        default:
-            redSlider.setValue(Float(text) ?? 0.0, animated: true)
-            blueValueLabel.text = text
+        let maximumValue: Float = 1.00
+        
+        if let textFieldValue = Float(text), maximumValue >= textFieldValue {
+            switch textField.tag {
+            case 0:
+                redSlider.setValue(textFieldValue, animated: true)
+            case 1:
+                greenSlider.setValue(textFieldValue, animated: true)
+            default:
+                blueSlider.setValue(textFieldValue, animated: true)
+            }
+            
+            setupLabel(for: redValueLabel, greenValueLabel, blueValueLabel)
+            setColor()
+        } else if text == "" {
+            callAlert(title: "Ошибочка 🥲", message: "Поле не может быть пустым. В следующий раз будьте бдительней.")
+        } else {
+            callAlert(title: "Ошибочка 🥲", message: "Число не должно превышать 1.00! В следующий раз будьте бдительней.")
         }
-        setColor()
     }
     
     private func setupTFDelegate() {
@@ -168,5 +175,15 @@ extension SettingsViewController: UITextFieldDelegate {
     
     @objc func dismissKeyboard() {
         view.endEditing(true)
+    }
+
+    private func callAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alert.addAction(okAction)
+        
+        present(alert, animated: true) {
+            self.setupTF()
+        }
     }
 }
